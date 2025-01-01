@@ -24,7 +24,7 @@ const initialState = {
   theme: getThemeFromLocalStorage(),
 };
 
-const UserSlice = createSlice({
+const userSlice = createSlice({
   name: 'user',
   initialState,
   reducers: {
@@ -33,7 +33,7 @@ const UserSlice = createSlice({
       state.user = user;
       localStorage.setItem('user', JSON.stringify(user));
     },
-    logoutUser: (state, action) => {
+    logoutUser: (state) => {
       state.user = null;
       localStorage.removeItem('user');
       toast.success('logged out successfully');
@@ -47,6 +47,6 @@ const UserSlice = createSlice({
   },
 });
 
-export const { loginUser, logoutUser, toggleTheme } = UserSlice.actions;
+export const { loginUser, logoutUser, toggleTheme } = userSlice.actions;
 
-export default UserSlice.reducer;
+export default userSlice.reducer;
