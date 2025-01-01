@@ -1,5 +1,5 @@
-import React, { useState } from 'react'
-import { customFetch, formatPrice, generateAmountOptions } from '../utils'
+import React, { useState } from 'react';
+import { customFetch, formatPrice, generateAmountOptions } from '../utils';
 import { Link, useLoaderData } from 'react-router-dom';
 import { useDispatch } from 'react-redux';
 import { addItem } from '../features/cart/CartSlice';
@@ -7,21 +7,25 @@ import { addItem } from '../features/cart/CartSlice';
 const singleProductQuery = (id) => {
   return {
     queryKey: ['singleProduct', id],
-    queryFn: () => customFetch.get(`/products/${id}`)
-  }
-}
+    queryFn: () => customFetch.get(`/products/${id}`),
+  };
+};
 
-export const loader = (queryClient) => async ({ params }) => {
-  console.log("params", params);
-  const { id } = params;
-  // const response = await customFetch.get(`/products/${id}`);
-  const response = await queryClient.ensureQueryData(singleProductQuery(id));
-  const product = response.data.data;
-  return { id: product.id, product: product.attributes }
-}
+export const loader =
+  (queryClient) =>
+  async ({ params }) => {
+    const { id } = params;
+    // const response = await customFetch.get(`/products/${id}`);
+    const response = await queryClient.ensureQueryData(singleProductQuery(id));
+    const product = response.data.data;
+    return { id: product.id, product: product.attributes };
+  };
 
 const SingleProduct = () => {
-  const { id, product: { image, title, price, description, colors, company } } = useLoaderData();
+  const {
+    id,
+    product: { image, title, price, description, colors, company },
+  } = useLoaderData();
   const dollarAmount = formatPrice(price);
   const [productColor, setProductColor] = useState(colors[0]);
   const [amount, setAmount] = useState(1);
@@ -38,14 +42,14 @@ const SingleProduct = () => {
     price,
     amount,
     company,
-    productColor
-  }
+    productColor,
+  };
 
   const dispatch = useDispatch();
 
   const addToCart = () => {
-    dispatch(addItem({ product: cartProduct }))
-  }
+    dispatch(addItem({ product: cartProduct }));
+  };
 
   return (
     <section>
@@ -60,43 +64,52 @@ const SingleProduct = () => {
         </ul>
       </div>
       <div className="mt-6 grid gap-y-8 lg:grid-cols-2 lg:gap-x-16">
-        <img src={image} alt={title} className='w-96 h-96 object-cover rounded-lg lg:w-full' />
+        <img src={image} alt={title} className="w-96 h-96 object-cover rounded-lg lg:w-full" />
         <div>
-          <h1 className='capitalize text-3xl font-bold'>{title}</h1>
-          <h4 className='text-xl text-neutral-content font bold mt-2'>{company}</h4>
-          <p className='mt-3 text-xl'>{dollarAmount}</p>
-          <p className='mt-6 leading-8'>{description}</p>
+          <h1 className="capitalize text-3xl font-bold">{title}</h1>
+          <h4 className="text-xl text-neutral-content font bold mt-2">{company}</h4>
+          <p className="mt-3 text-xl">{dollarAmount}</p>
+          <p className="mt-6 leading-8">{description}</p>
 
           <div className="mt-6">
-            <h4 className='text-md font-medium tracking-wider capitalize'>colors</h4>
+            <h4 className="text-md font-medium tracking-wider capitalize">colors</h4>
             <div className="mt-2">
-              {
-                colors.map(color => {
-                  return <button key={color} type='button' className={`badge w-6 h-6 mr-2 ${color === productColor && 'border-2 border-secondary'}`} style={{ backgroundColor: color }} onClick={() => setProductColor(color)}>
-                  </button>
-                })
-              }
+              {colors.map((color) => {
+                return (
+                  <button
+                    key={color}
+                    type="button"
+                    className={`badge w-6 h-6 mr-2 ${color === productColor && 'border-2 border-secondary'}`}
+                    style={{ backgroundColor: color }}
+                    onClick={() => setProductColor(color)}
+                  ></button>
+                );
+              })}
             </div>
           </div>
           <div className="form-control w-full max-w-xs">
-            <label htmlFor="amount" className='label'>
-              <h4 className='text-md font-medium tracking-wider capitalize'>Amount</h4>
+            <label htmlFor="amount" className="label">
+              <h4 className="text-md font-medium tracking-wider capitalize">Amount</h4>
             </label>
-            <select id="amount" className='select select-secondary select-bordered select-md'
-              value={amount} onChange={handleAmount}>
+            <select
+              id="amount"
+              className="select select-secondary select-bordered select-md"
+              value={amount}
+              onChange={handleAmount}
+            >
               {generateAmountOptions(20)}
             </select>
           </div>
 
           <div className="mt-10">
-            <button className="btn btn-secondary" onClick={addToCart}>Add to bag</button>
+            <button className="btn btn-secondary" onClick={addToCart}>
+              Add to bag
+            </button>
           </div>
-
-
         </div>
       </div>
     </section>
-  )
-}
+  );
+};
 
-export default SingleProduct
+export default SingleProduct;
