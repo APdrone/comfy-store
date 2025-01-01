@@ -4,8 +4,14 @@ import { customFetch } from '../utils'
 
 const url = '/products?featured=true';
 
-export const loader = async () => {
-  const response = await customFetch.get(url);
+const FeaturedProductsQuery = {
+  queryKey: ['featuredProducts'],
+  queryFn: () => customFetch(url)
+}
+
+export const loader = (queryClient) => async () => {
+  // const response = await customFetch.get(url);
+  const response = await queryClient.ensureQueryData(FeaturedProductsQuery)
   const products = response.data.data;
   return { products }
 }
